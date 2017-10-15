@@ -42,7 +42,7 @@ var server = http.createServer((req, res)=>{
 
     userInput = (req.url).split('?')[1];
 
-    res.write("caseNumber: " + caseNumber.toString());
+    res.write("callback(" + caseNumber.toString() + ")");
     res.end();
 
     // crawl date from now until the day searched
