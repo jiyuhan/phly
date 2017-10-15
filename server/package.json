@@ -1,0 +1,23 @@
+{
+  "name": "phly",
+  "version": "1.0.0",
+  "description": "phly is awesome",
+  "main": "restAPI.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "private"
+  },
+  "dependencies": {
+    "brain": "^0.7.0",
+    "cheerio": "^1.0.0-rc.2",
+    "htmlparser2": "^3.9.2",
+    "mysql": "^2.15.0",
+    "node-schedule": "^1.2.5",
+    "selenium-webdriver": "^3.6.0"
+  },
+  "author": "github.com/jiyuhan",
+  "license": "ISC"
+}

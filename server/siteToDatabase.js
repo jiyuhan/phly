@@ -99,14 +99,14 @@ var dataToDatabase = function($, caseNumber, input) {
         console.log($(this).attr('aria-label'));
     });
 
-    //console.log(dom[15].prev.children[4].next.children[1].children[1].children[9].children[1].children[1].children[5].children[1].children[3].children[1].children);
-
+    // console.log(dom[15].prev.children[4].next.children[1].children[1].children[9].children[1].children[1].children[5].children[1].children[3].children[1].children);
+    //
     // var filtered = dom[1].children.filter(data => {
     //     // return Object.hasOwnProperty.call(data, 'type');
     //     // return data.attribs.class === 'Flights-Results-BestFlights';
     //     // return
     // });
-
+    //
     // filtered = [];
     // for(var i = 1; i < dom[1].children.length; i = i + 2) {
     //     filtered.push(dom[1].children[i]);
