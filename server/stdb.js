@@ -1,4 +1,3 @@
-'use strict'
 var http = require('http');
 var mysql = require('mysql');
 var https = require('https');
@@ -13,6 +12,7 @@ let driver = new webdriver.Builder()
 
 // sample url: https://www.kayak.com/flights/COU-SFO/2017-10-16/2017-10-19
 var baseUrl = 'https://www.kayak.com/flights/';
+var testUrl = 'COU-SFO/2017-10-16/2017-10-19';
 
 var connection = mysql.createConnection({
   host: 'phly.c7jx0v6pormd.us-east-1.rds.amazonaws.com',
@@ -22,6 +22,9 @@ var connection = mysql.createConnection({
   database : 'phly'
 });
 
+var isDbConnected = false;
+var isServerCreated = false;
+var userInput = '';
 var caseNumber = 10000;
 
 connection.connect(function(err) {
@@ -37,7 +40,7 @@ connection.connect(function(err) {
 var server = http.createServer((req, res)=>{
     res.writeHead(200, {'Content-Type': 'text/plain'});
 
-    var userInput = (req.url).split('?')[1];
+    userInput = (req.url).split('?')[1];
 
     res.write("caseNumber: " + caseNumber.toString());
     res.end();
@@ -59,6 +62,7 @@ var crawl = function(caseNumber, input) {
       // it's working but I don't want too many tables right now.
 
     connection.query(sql, function (err, result) {
+        //if (err) throw err;
         console.log("Table created");
     });
 
@@ -68,24 +72,26 @@ var crawl = function(caseNumber, input) {
     dates.forEach(function(date) {
         var half = date.toISOString().split('T')[0];
         console.log(baseUrl + input.split('/')[0] + "/" + half + "/" + input.split('/')[2]);
+
         getData(baseUrl + input.split('/')[0] + "/" + half + "/" + input.split('/')[2], caseNumber, input.split('/')[0] + "/" + half + "/" + input.split('/')[2]);
     })
 
-    var j = schedule.scheduleJob('30 * * * *', function(){
-        var date = input.split('/')[1].split('-');
-        console.log(date);
-        var dates = getDates(new Date(2017,9,15), new Date(date[0],date[1] - 1,date[2]));
-        dates.forEach(function(date) {
-            var half = date.toISOString().split('T')[0];
-            console.log(baseUrl + input.split('/')[0] + "/" + half + "/" + input.split('/')[2]);
-            getData(baseUrl + input.split('/')[0] + "/" + half + "/" + input.split('/')[2], caseNumber, input.split('/')[0] + "/" + half + "/" + input.split('/')[2]);
-        })
-    });
+    // var j = schedule.scheduleJob('30 * * * *', function(){
+    //     var date = input.split('/')[1].split('-');
+    //     console.log(date);
+    //     var dates = getDates(new Date(2017,9,15), new Date(date[0],date[1] - 1,date[2]));
+    //     dates.forEach(function(date) {
+    //         var half = date.toISOString().split('T')[0];
+    //         console.log(baseUrl + input.split('/')[0] + "/" + half + "/" + input.split('/')[2]);
+    //         getData(baseUrl + input.split('/')[0] + "/" + half + "/" + input.split('/')[2], caseNumber, input.split('/')[0] + "/" + half + "/" + input.split('/')[2]);
+    //     })
+    // });
 }
 
 // Returns an array of dates between the two dates
 var getDates = function(startDate, endDate) {
-    var dates = [], currentDate = startDate,
+    var dates = [];
+    var currentDate = startDate,
     addDays = function(days) {
         var date = new Date(this.valueOf());
         date.setDate(date.getDate() + days);
@@ -97,7 +103,6 @@ var getDates = function(startDate, endDate) {
     }
     return dates;
 };
-
 
 var getData = function(url, caseNumber, input) {
     driver.get(url);
